@@ -15,7 +15,7 @@ cd ..
 
 ## Examples
 
-Solarized dark     |  Solarized Ocean
+Input              | Output
 :-----------------:|:-----------------------:
 ![](readme/1.png)  |  ![](readme/1-out.png)
 ![](readme/2.png)  |  ![](readme/2-out.png)
