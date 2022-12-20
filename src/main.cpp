@@ -66,6 +66,7 @@ std::vector<std::vector<float>> getRandomCircle(const std::vector<int> center, f
     return points;
 }
 
+// find minimum and maximum x and y coordinates for the input points
 std::vector<int> findMinMaxPositions(std::vector<std::vector<int>>& points) {
     int min_x = INT_MAX;
     int max_x = INT_MIN;
@@ -83,6 +84,7 @@ std::vector<int> findMinMaxPositions(std::vector<std::vector<int>>& points) {
     return result;
 }
 
+// filter out points that lie outside the crown's 3D bounding box
 std::vector<std::vector<int>> pointsInsideCurve(std::vector<std::vector<int>>& curvePoints, std::vector<std::vector<int>>& randomPoints) {
     std::vector<std::vector<int>> insidePoints;
     std::vector<int> maxMins = findMinMaxPositions(curvePoints);
@@ -116,6 +118,7 @@ std::vector<std::vector<int>> pointsInsideCurve(std::vector<std::vector<int>>& c
     return insidePoints;
 }
 
+// find minimum and maximum values of X for a given set of points in a given range of Y
 std::vector<int> findMinMaxXForYRange(int oldY, int newY) {
     int minX = INT_MAX, maxX = INT_MIN;
     std::vector<int> result;
@@ -132,6 +135,7 @@ std::vector<int> findMinMaxXForYRange(int oldY, int newY) {
     return result;
 }
 
+// Generate random points inside the crown for branchesss
 std::vector<std::vector<int>> generateRandomPoints(int min_x, int max_x, int min_y, int max_y, int pointsFactor) {
     std::vector<std::vector<int>> points;
     int xRange = max_x - min_x;
@@ -140,6 +144,7 @@ std::vector<std::vector<int>> generateRandomPoints(int min_x, int max_x, int min
     LEVELS_IN_TREE_CROWN = levels;
     int yOffset = yRange / levels;
     
+    // for every level, calculating some set of points for uniformaity
     for (int j = 1; j <= levels; j++) {
         std::vector<int> data = findMinMaxXForYRange(min_y + (yOffset * (j - 1)), min_y + (yOffset * j));
         int minX = data[0], maxX = data[1];
@@ -159,6 +164,7 @@ std::vector<std::vector<int>> generateRandomPoints(int min_x, int max_x, int min
     return points;
 }
 
+// generate a random string of variable length
 std::string randomString(const int length) {
     static const char characterPool[] = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
     std::string tempString;
@@ -170,6 +176,7 @@ std::string randomString(const int length) {
     return tempString;
 }
 
+// find distance between two points
 double distance(const std::vector<int>& a, const std::vector<int>& b) {
     return pow(
         pow(a[0] - b[0], 2) + pow(a[1] - b[1], 2) + pow(a[2] - b[2], 2), 
@@ -205,7 +212,8 @@ public:
 	void clearPoints() {
 		points.clear();
 	}
-
+	
+	// generate bezier curve points for a set of pointssssssss
 	std::vector<std::vector<float>> getCurve() {
 		std::vector<std::vector<float>> curvePoints;
 
@@ -245,6 +253,7 @@ public:
 	std::vector<std::vector<float>> points;
 };
 
+// find distances of a given point from all the points
 std::unordered_map<std::string, double> distanceFromPoint(const std::vector<int>& start_point, std::unordered_set<std::string>& keys, std::unordered_map<std::string, std::vector<int>>& points) {
     std::unordered_map<std::string, double> distances;
 
@@ -265,6 +274,7 @@ public:
     }
 };
 
+// function to generate a branch
 int createLine(unsigned int & program, unsigned int & shape_VAO, const std::vector<int>& a, const std::vector<int>& b) {
     glUseProgram(program);
 
@@ -345,6 +355,7 @@ int createLine(unsigned int & program, unsigned int & shape_VAO, const std::vect
     return nVertices / 3;
 }
 
+// Function to build the actual skeleton of the tree
 std::unordered_map<std::string, std::string> buildTreeSkeleton(std::vector<int>& _start, std::string _start_key, std::unordered_map<std::string, std::vector<int>>& points) {
     std::unordered_set<std::string> remaining;
     std::unordered_set<std::string> taken;
@@ -408,6 +419,7 @@ std::unordered_map<std::string, std::string> buildTreeSkeleton(std::vector<int>&
     return parent;
 }
 
+// find the minimum point in a set of points
 std::pair<std::string, std::vector<int>> minPoint(std::unordered_map<std::string, std::vector<int>>& points) {
     std::vector<std::pair<std::string, std::vector<int>>> items;
     std::pair<std::string, std::vector<int>> result;
@@ -428,6 +440,7 @@ std::pair<std::string, std::vector<int>> minPoint(std::unordered_map<std::string
     return result;
 }
 
+// add Z axis to 2D space coordinates
 void addZCoordinateToPoints(std::vector<std::vector<int>>& points, int min_x, int max_x, int min_y, int max_y) {
     int xRange = max_x - min_x;
     int yRange = max_y - min_y;
@@ -455,6 +468,7 @@ void addZCoordinateToPoints(std::vector<std::vector<int>>& points, int min_x, in
     // }
 }
 
+// generate points between two points that for a curvature or arc along one of th
 std::vector<std::vector<int>> pointsOnLine(const std::vector<int>& start, const std::vector<int>& end) {
     std::vector<std::vector<int>> points;
     double lineLength = sqrt(pow(end[0] - start[0], 2) + pow(end[1] - start[1], 2) + pow(end[2] - start[2], 2));
@@ -523,6 +537,7 @@ void printVector(const std::vector<int>& v) {
     std::cout << v[0] << " " << v[1] << " " << v[2] << std::endl;
 }
 
+// find a mutliplier to scale down points in the required space
 float findSanitizePointsMultiplier(std::vector<std::vector<int>>& points, std::vector<int> minMax) {
     float MIN = -100, MAX = 100;
     int MIN_VALUE_X = minMax[0];
@@ -550,6 +565,7 @@ float findSanitizePointsMultiplier(std::vector<std::vector<int>>& points, std::v
     return std::min(MULTIPLIER_X, MULTIPLIER_Y);
 }
 
+// Sanatize the points using the multiplier
 void sanitizePoints(std::vector<std::vector<int>>& points, float MULTIPLIER) {
     for (int i = 0; i < points.size(); i++) {
         points[i][0] *= MULTIPLIER;
@@ -591,29 +607,39 @@ int main(int argc, char** argv) {
         finT.close();
     }
 
+    // computing multiplier for all the points
     float af = findSanitizePointsMultiplier(crownPoints, findMinMaxPositions(crownPoints));
     float bf = findSanitizePointsMultiplier(trunkPoints, findMinMaxPositions(trunkPoints));
     float finalMultiplier = std::min(af, bf);
     std::cout << "Points Multiplier: " << finalMultiplier << std::endl;
+	
+    // sanitizing the points	
     sanitizePoints(crownPoints, finalMultiplier);
     sanitizePoints(trunkPoints, finalMultiplier);
-
+    
     std::vector<int> maxMins = findMinMaxPositions(crownPoints);
     int xLength = maxMins[1] - maxMins[0];
     int yLength = maxMins[3] - maxMins[2];
+	
+    // generating random points inside the required bounding box
     std::vector<std::vector<int>> randomPoints = generateRandomPoints(maxMins[0], maxMins[1], maxMins[2], maxMins[3], 150);
     std::cout << "number of random points: " << randomPoints.size() << std::endl;
+	
+    /// filter out points outside the crown
     std::vector<std::vector<int>> insideCrownPoints = pointsInsideCurve(crownPoints, randomPoints);
     std::cout << "number of points inside crown: " << insideCrownPoints.size() << std::endl;
     
+    // adding a z axis to final points
     addZCoordinateToPoints(insideCrownPoints, maxMins[0], maxMins[1], maxMins[2], maxMins[3]);
-
+    
+    // generating some extra points to form a smooth surrounding frame for the crown
     for (auto p : crownPoints) {
         int vvv = 0 + (rand() % (2 - 0 + 1));
 
         if (vvv == 0)
             continue;
-
+        
+	// morphing the distance of points from the center of the tree
         int reducer = 5 + (rand() % (20 - 5 + 1));
 
         std::vector<std::vector<float>> cp = getRandomCircle(
@@ -629,7 +655,8 @@ int main(int argc, char** argv) {
                 insideCrownPoints.push_back(std::vector<int> {(int) pp[0], (int) pp[1], (int) pp[2]});
         }
     }
-
+    
+    // alloting a unique key to all the points
     std::unordered_map<std::string, std::vector<int>> crownPointsMap;
     std::unordered_map<std::string, std::vector<int>> trunkPointsMap;
     std::unordered_map<std::string, std::vector<int>> insideCrownPointsMap;
@@ -642,7 +669,8 @@ int main(int argc, char** argv) {
 
     for (auto p : insideCrownPoints)
         insideCrownPointsMap[randomString(10)] = p;
-
+   
+    // finding a truck point to generate branches
     std::pair<std::string, std::vector<int>> mp = minPoint(trunkPointsMap);
     std::vector<std::vector<std::vector<float>>> trunkCirclePointsRaw;
     std::vector<std::vector<std::vector<float>>> trunkCirclePoints; // formatted
@@ -660,7 +688,8 @@ int main(int argc, char** argv) {
             trunkCirclePointsMap[j].push_back(trunkCirclePointsRaw[i][j]);
         }
     }
-
+    
+    // arranging points for proper rendering
     int iiii = 0, jjjj = 1;
 
     while (iiii <= NUMBER_OF_POINTS_ON_CIRCLE) {
